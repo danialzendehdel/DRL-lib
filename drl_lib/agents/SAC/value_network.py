@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from agents.SAC.network import Network_graph
+from drl_lib.agents.SAC.network import Network_graph
 
 class ValueNetwork(nn.Module):
     def __init__(self, state_dim, hidden_dims=[256, 256], device='cpu'):
