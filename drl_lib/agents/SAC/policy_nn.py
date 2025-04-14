@@ -2,7 +2,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from agents.SAC.network import Network_graph
+from drl_lib.agents.SAC.network import Network_graph
 
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim, hidden_dims, activation_fn=nn.ReLU(), device='cpu', action_bound=None):

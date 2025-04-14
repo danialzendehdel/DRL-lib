@@ -1,3 +1,77 @@
+# DRL-Lib
+
+A Deep Reinforcement Learning library implementing Soft Actor-Critic (SAC) and other algorithms.
+
+## Installation
+
+```bash
+pip install drl-lib
+```
+
+## Quick Start
+
+```python
+import gymnasium as gym
+from drl_lib.agents.SAC.agent_sac import SACAgent
+
+# Create environment
+env = gym.make('Pendulum-v1')
+state_dim = env.observation_space.shape[0]
+action_dim = env.action_space.shape[0]
+
+# Initialize SAC agent
+agent = SACAgent(
+    state_dim=state_dim,
+    action_dim=action_dim,
+    hidden_dims=[256, 256],
+    alpha=0.2,
+    gamma=0.99,
+    tau=0.005,
+    actor_lr=3e-4,
+    critic_lr=3e-4,
+    value_lr=3e-4,
+    buffer_size=1000000,
+    batch_size=256,
+    device='cuda' if torch.cuda.is_available() else 'cpu',
+    action_bound=(-2, 2)
+)
+
+# Training loop
+for episode in range(1000):
+    state, _ = env.reset()
+    episode_reward = 0
+    done = False
+    
+    while not done:
+        action = agent.select_action(state)
+        next_state, reward, terminated, truncated, _ = env.step(action)
+        done = terminated or truncated
+        agent.store_experience(state, action, reward, next_state, done)
+        agent.update()
+        state = next_state
+        episode_reward += reward
+    
+    print(f"Episode {episode}, Reward: {episode_reward}")
+```
+
+## Features
+
+- Soft Actor-Critic (SAC) implementation
+- Gradient monitoring and debugging tools
+- Replay buffer for experience storage
+- Support for continuous action spaces
+- Automatic GPU support
+
+## Documentation
+
+For detailed documentation, please visit [documentation link].
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+
+
 # Soft Actor-Critic (SAC) Implementation
 
 ## Key Points
