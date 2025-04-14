@@ -23,4 +23,8 @@ setup(
         "Programming Language :: Python :: 3.9",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
     ],
+    project_urls={
+        "Homepage": "https://github.com/danialzendehdel/DRL-lib",
+        "Bug Tracker": "https://github.com/danialzendehdel/DRL-lib/issues",
+    },
 ) 
