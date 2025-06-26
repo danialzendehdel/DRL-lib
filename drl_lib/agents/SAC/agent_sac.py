@@ -10,7 +10,7 @@ from drl_lib.debugging.journaling import Journal
 
 
 class SACAgent:
-    def __init__(self, state_dim, action_dim, hidden_dims, alpha, gamma, tau, actor_lr, critic_lr, value_lr, buffer_size, batch_size, device, action_bound=None):
+    def __init__(self, state_dim, action_dim, hidden_dims, alpha, gamma, tau, actor_lr, critic_lr, value_lr, buffer_size, batch_size, device, action_bound=None, use_tanh=True):
         """
         Initialize the SAC agent with all necessary components.
 
@@ -27,22 +27,24 @@ class SACAgent:
             buffer_size (int): Maximum size of the Replay Buffer.
             batch_size (int): Batch size for sampling from the Replay Buffer.
             device (str): Device to run computations on (e.g., 'cuda' or 'cpu').
-            action_bound (tuple, optional): (min, max) bounds for actions (e.g., (-2, 2)).
+            action_bound (tuple, optional): (min, max) bounds for actions (e.g., (-2, 2)). Defaults to None.
+            use_tanh (bool, optional): Whether to use tanh squashing for actions in the Actor. Defaults to True.
         """
         self.device = device
         self.alpha = alpha
         self.gamma = gamma
         self.tau = tau
+        self.use_tanh = use_tanh # Store use_tanh
         
         # Initialize Journal for monitoring
         self.journal = Journal(
             directory="logs",
-            action_bounds=action_bound if action_bound else (-1, 1),
+            action_bounds=action_bound if action_bound else (-1, 1), # This might need adjustment based on use_tanh
             experiment_name="sac_experiment"
         )
         
         # Initialize networks
-        self.actor = Actor(state_dim, action_dim, hidden_dims, device=device, action_bound=action_bound)
+        self.actor = Actor(state_dim, action_dim, hidden_dims, device=device, action_bound=action_bound, use_tanh=self.use_tanh)
         self.q1 = QNetwork(state_dim, action_dim, hidden_dims, device=device)
         self.q2 = QNetwork(state_dim, action_dim, hidden_dims, device=device)
         self.value = ValueNetwork(state_dim, hidden_dims, device=device)
