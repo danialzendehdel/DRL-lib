@@ -21,7 +21,13 @@ class Actor(nn.Module):
         super(Actor, self).__init__()
 
         self.device = device
-        self.action_bound = action_bound
+        if action_bound is not None:
+            self.action_bound = (
+                torch.tensor(action_bound[0], dtype=torch.float32, device=device),
+                torch.tensor(action_bound[1], dtype=torch.float32, device=device)
+            )
+        else:
+            self.action_bound = None
         self.action_dim = action_dim
         self.use_tanh = use_tanh
         self.min_logstd, self.max_logstd = -20, 2
