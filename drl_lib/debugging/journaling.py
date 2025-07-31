@@ -1,6 +1,8 @@
 import torch.nn as nn
 import os 
 import datetime
+import numpy as np
+
 class Journal:
      # ANSI color codes
     COLORS = {
@@ -41,10 +43,15 @@ class Journal:
 
     
     def _actor_debug(self, sample_action):
+        # Ensure sample_action is a numpy array for consistent comparison
+        if not isinstance(sample_action, np.ndarray):
+            sample_action = np.array(sample_action)
 
-        bound_check = (sample_action > self.action_bound_lower) or (sample_action < self.action_bound_upper) 
+        # Check for out-of-bounds actions
+        lower_bound_check = np.any(sample_action < self.action_bound_lower)
+        upper_bound_check = np.any(sample_action > self.action_bound_upper)
 
-        if bound_check:
+        if lower_bound_check or upper_bound_check:
             self.entries.append(f"Action out of bounds: {sample_action}")
 
     def log(self, message: str, level: str = "INFO"):
