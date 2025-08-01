@@ -37,6 +37,7 @@ venv-grok/
 
 # Project specific
 logs/
+results/
 *.log
 *.csv
 *.png
